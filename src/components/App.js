@@ -2,7 +2,7 @@ import React, { useState,useReducer } from "react";
 import "./../styles/App.css";
 
 
-const states = [{
+const statesData = [{
 	name : "Madhya Pradesh",
 	description:"Madhya Pradesh, a large state in central India, retains landmarks from eras throughout Indian history.",
 	city :[{
@@ -140,12 +140,79 @@ const states = [{
 
 function App() 
 {
-	// Do not alter/remove main div
+	const [selectedState, setSelectedState] = useState(statesData[0]);
+	const [selectedCity, setSelectedCity] = useState(selectedState.city[0]);
+	const [selectedLandmark, setSelectedLandmark] = useState(selectedCity.landmarks[0]);
+  
 	return (
-	<div id="main">
-		
-	</div>
+	  <div id="main">
+		<h1>DropDown React</h1>
+		<select
+		  id="state"
+		  value={selectedState.name}
+		  onChange={(e) => handleStateChange(e)}
+		>
+		  {statesData.map((state, index) => (
+			<option key={index} value={state.name}>
+			  {state.name}
+			</option>
+		  ))}
+		</select>
+		<select
+		  id="city"
+		  value={selectedCity.name}
+		  onChange={(e) => handleCityChange(e)}
+		>
+		  {selectedState.city.map((city, index) => (
+			<option key={index} value={city.name}>
+			  {city.name}
+			</option>
+		  ))}
+		</select>
+		<select
+		  id="landmark"
+		  value={selectedLandmark.name}
+		  onChange={(e) => handleLandmarkChange(e)}
+		>
+		  {selectedCity.landmarks.map((landmark, index) => (
+			<option key={index} value={landmark.name}>
+			  {landmark.name}
+			</option>
+		  ))}
+		</select>
+  
+		<div id="state-name">{selectedState.name}</div>
+		<div id="state-description">{selectedState.description}</div>
+		<div id="city-name">{selectedCity.name}</div>
+		<div id="city-description">{selectedCity.description}</div>
+		<div id="landmark-name">{selectedLandmark.name}</div>
+		<div id="landmark-description">{selectedLandmark.description}</div>
+	  </div>
+  
 	);
+
+	function handleStateChange(e) {
+		const selectedStateName = e.target.value;
+		const selectedState = statesData.find((state) => state.name === selectedStateName);
+		setSelectedState(selectedState);
+		setSelectedCity(selectedState.city[0]);
+		setSelectedLandmark(selectedState.city[0].landmarks[0]);
+	  }
+	
+	  function handleCityChange(e) {
+		const selectedCityName = e.target.value;
+		const selectedCity = selectedState.city.find((city) => city.name === selectedCityName);
+		setSelectedCity(selectedCity);
+		setSelectedLandmark(selectedCity.landmarks[0]);
+	  }
+	
+	  function handleLandmarkChange(e) {
+		const selectedLandmarkName = e.target.value;
+		const selectedLandmark = selectedCity.landmarks.find(
+		  (landmark) => landmark.name === selectedLandmarkName
+		);
+		setSelectedLandmark(selectedLandmark);
+	  }
 }
 
 
